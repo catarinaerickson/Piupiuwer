@@ -32,9 +32,9 @@ export const PageFeed = styled.div `
 
     main .input-block section {
         width: 100%;
-        padding: 2rem;
         display: flex;
         flex-direction: column;
+        padding: 0 1rem 1rem 1rem;
     }
 
     main .input-block section textarea {
@@ -46,17 +46,27 @@ export const PageFeed = styled.div `
 
     main .input-block section .options {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        margin-top: 2rem;
     }
 
     main .input-block section .options .options-bar{
         display: flex;
-        margin-right: 2rem;
     }
 
     main .input-block section .options .options-bar img{
         margin: 0 1rem;
+    }
+
+    @media (max-width: 360px) {
+        main .input-block section .options{
+            justify-content: flex-end;
+            
+        }
+
+        main .input-block section .options .options-bar {
+            display: none;
+        }
     }
 
     

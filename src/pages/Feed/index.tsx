@@ -8,16 +8,16 @@ import { PageFeed } from './styles';
 import profileImg from '../../assets/images/piupic.png';
 import imgIcon from '../../assets/images/image.svg';
 import gifIcon from '../../assets/images/gif.svg';
-import topicIcon from '../../assets/images/server.svg';
 import smileIcon from '../../assets/images/smile.svg';
 import calendarIcon from '../../assets/images/calendar.svg';
+import Piu from '../../components/Piu';
 
 
 
  function Feed() {
      return(
          <PageFeed>
-            {/* /* <Navbar /> */ }
+            <Navbar />
             <main>
                 <Header />
                 <form>
@@ -27,11 +27,10 @@ import calendarIcon from '../../assets/images/calendar.svg';
                             <textarea placeholder='Dá um piu!'></textarea>
                             <div className="options">
                                 <div className="options-bar">
-                                    {/* <img src={ imgIcon } alt="Adicionar imagem"/>
-                                    <img src={ gifIcon } alt="Adicionar gif"/> */}
-                                    {/* <img src={ topicIcon } alt="Adicionar enquete"/>
+                                    <img src={ imgIcon } alt="Adicionar imagem"/>
+                                    <img src={ gifIcon } alt="Adicionar gif"/>
                                     <img src={ smileIcon } alt="Adicionar emoji"/>
-                                    <img src={ calendarIcon } alt="Adicionar agenda"/> */}
+                                    <img src={ calendarIcon } alt="Adicionar agenda"/>
                                 </div>
                                 <Button 
                                     title='Piupiu'
@@ -41,6 +40,9 @@ import calendarIcon from '../../assets/images/calendar.svg';
                         </section>
                     </div>
                 </form>
+
+                <Piu />
+                <Piu />
             </main>
          </PageFeed>
      )

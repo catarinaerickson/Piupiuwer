@@ -26,7 +26,35 @@ export const NavbarComponent = styled.div `
         }
     }
 
+    .navbar-item p {
+        display: none;
+    }
+
     .navbar-item img {
         height: 3rem;
+    }
+
+    @media (max-width: 500px) {
+        display: none;
+    }
+
+    @media (min-width: 850px) {
+        align-items: flex-start;
+
+        .navbar-item {
+            display: flex;
+            align-items: center;
+            border-radius: 3rem;
+        }
+
+        .navbar-item img {
+            margin-right: 1rem;
+        }
+
+        .navbar-item p{
+            display: block;
+            font: 700 2.0rem Archivo;
+            color: var(--color-text-title);
+        }
     }
 `

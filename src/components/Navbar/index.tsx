@@ -20,30 +20,37 @@ const Navbar: React.FC = () => {
 
             <div className="navbar-item">
                 <img src={ homeIcon } alt="Home"/>
+                <p>Início</p>
             </div>
 
             <div className="navbar-item">
                 <img src={ hashIcon } alt="Explore"/>
+                <p>Explorar</p>
             </div>
 
             <div className="navbar-item">
                 <img src={ bellIcon } alt="Notificações"/>
+                <p>Notificações</p>
             </div>
 
             <div className="navbar-item">
                 <img src={ messageIcon } alt="Mensagens"/>
+                <p>Mensagens</p>
             </div>
 
             <div className="navbar-item">
                 <img src={ markerIcon } alt="Marcadores"/>
+                <p>Marcadores</p>
             </div>
 
             <div className="navbar-item">
                 <img src={ listIcon } alt="Listas"/>
+                <p>Listas</p>
             </div>
 
             <div className="navbar-item">
                 <img src={ profileIcon } alt="Perfil"/>
+                <p>Perfil</p>
             </div>
 
         </NavbarComponent>
