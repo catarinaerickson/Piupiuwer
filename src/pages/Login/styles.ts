@@ -27,6 +27,10 @@ export const PageLogin = styled.div `
         margin-bottom: 3rem;
     }
 
+    #page-login-content form{
+        width: 100%;
+    }
+
     #page-login-content .links {
         margin-top: 1.5rem;
         display: flex;
