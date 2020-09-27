@@ -16,6 +16,7 @@ const GlobalStyle = createGlobalStyle`
         --color-text-title: #000000;    
         --color-input-content: RGBA(14,0,0,0.53);
         --color-input-text: RGBA(0,0,0,0.8);
+        --color-err-text: #F9441D;
     }
 
     * {

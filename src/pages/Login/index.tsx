@@ -1,10 +1,11 @@
-import React, { FormEvent, useCallback, useState } from 'react';
+import React, { FormEvent, useCallback, useState} from 'react';
 
 import { PageLogin } from './styles';
 import logoImg from '../../assets/images/logo.svg';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { useAuth } from '../../hooks/auth';
+
 
 function Login() {
 
@@ -13,14 +14,23 @@ function Login() {
         password:''
     });
 
-    const { login } = useAuth();
+    const [errMessage, setErrMessage] = useState({message: ''});
 
+    const { login } = useAuth();
+    
     const handleLogin = useCallback (async (e: FormEvent) => {
-        console.log(user);
         e.preventDefault();
-        await login(user);
+        const err = await login(user); 
+
+        if (err != null) {
+            setErrMessage({message: err});
+        }        
         
-    }, [user, login]);
+        setUser({username: '', password: ''});
+
+    }, [user, login, setErrMessage]);
+    
+    
     
     return (
 
@@ -29,6 +39,11 @@ function Login() {
             <div id="page-login-content">
                 <img src={ logoImg } alt="Pipiuwer"/>
                 <h1>Entrar no Piupiuwer</h1>  
+
+                <div className="err-message">
+                    <p>{errMessage.message}</p>
+                </div>
+
                 <form onSubmit={handleLogin}>
                     <Input
                         name='username'

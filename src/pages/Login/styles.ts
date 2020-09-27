@@ -27,6 +27,18 @@ export const PageLogin = styled.div `
         margin-bottom: 3rem;
     }
 
+    #page-login-content .err-message {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        padding-bottom: 0.3rem;
+    }
+
+    #page-login-content .err-message p {
+        font: 500 1.5rem Archivo;
+        color: var(--color-err-text);
+    }
+
     #page-login-content form{
         width: 100%;
     }
@@ -57,6 +69,6 @@ export const PageLogin = styled.div `
     #page-login-content .links a:hover{
         color: var(--color-primary-dark);
     }
-
-
 `
+
+

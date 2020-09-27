@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route as ReactRouter, RouteProps as ReactRouteProps, Redirect } from 'react-router-dom';
 
 import { useAuth } from '../hooks/auth';
@@ -8,20 +8,19 @@ interface RouteProps extends ReactRouteProps {
     component: React.ComponentType;
 }
 
-const Route: React.FC<RouteProps> = ({ isPrivate = false, component: Feed, ...rest }) => {
+const Route: React.FC<RouteProps> = ({ isPrivate=false, component: Component, ...rest }) => {
     const { user } = useAuth();
-
     return (
         <ReactRouter
             {...rest}
             render={({ location }) => {
                 return isPrivate === !!user
                     ? (
-                        <Feed />
+                        <Component />
                     ) : (
                         <Redirect
                             to={{
-                                pathname: '/login',
+                                pathname: isPrivate? '/login' : '/feed',
                                 state: { from: location }
                             }}
                         />

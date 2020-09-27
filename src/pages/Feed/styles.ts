@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const PageFeed = styled.div `
     width: 100vw;
     height: 100vh;
-
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -68,7 +67,6 @@ export const PageFeed = styled.div `
             display: none;
         }
     }
-
     
 
 `

@@ -9,7 +9,7 @@ export const NavbarComponent = styled.div `
     height:100%;
     padding: 1rem;
     margin-right: 0.1rem;
-
+    position: sticky;
     .navbar-logo {
         margin-bottom: 3rem;
     }
@@ -34,6 +34,26 @@ export const NavbarComponent = styled.div `
         height: 3rem;
     }
 
+    .navbar-logout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 2rem;
+    }
+
+    .navbar-logout > img {
+        width: 4rem;
+        display: none;
+    }
+
+    .navbar-logout p {
+        font: 500 2.0rem Archivo;
+        color: var(--color-input-content);
+        margin: 0 3rem 0 0.5rem;
+        display: none;
+    }
+
     @media (max-width: 500px) {
         display: none;
     }
@@ -56,5 +76,36 @@ export const NavbarComponent = styled.div `
             font: 700 2.0rem Archivo;
             color: var(--color-text-title);
         }
+
+        .navbar-logout {
+            justify-content: flex-start;
+        }
+
+        .navbar-logout img {
+            display: block;
+        }
+
+        .navbar-logout p {
+            display: block;
+        }
+    }
+
+    
+`
+export const LogoutComponent = styled.button `
+    border: 0;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    border-radius: 3rem;
+    background: var(--color-background-content);
+    padding: 1rem;
+
+    &:hover {
+        background: var(--color-primary-opacity);
+    }
+
+    img{
+        height: 3rem;
     }
 `

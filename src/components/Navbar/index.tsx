@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useCallback} from 'react';
+import { useAuth } from '../../hooks/auth';
 
 import { NavbarComponent } from './styles';
+import { LogoutComponent } from './styles';
 
 import logoImg from '../../assets/images/logo.svg';
 import homeIcon from '../../assets/images/home.svg';
@@ -10,8 +12,20 @@ import messageIcon from '../../assets/images/mail.svg';
 import markerIcon from '../../assets/images/bookmark.svg';
 import listIcon from '../../assets/images/list.svg';
 import profileIcon from '../../assets/images/person.svg';
+import profileImg from '../../assets/images/piupic.png';
+import LogoutIcon from '../../assets/images/logout.svg';
+
+
 
 const Navbar: React.FC = () => {
+    const { logout } = useAuth();
+
+    const handleLogout = useCallback(() => {
+        logout();
+    }, [logout])
+
+    const {user} = useAuth();
+
     return (
         <NavbarComponent>
             <div className="navbar-logo">
@@ -51,6 +65,14 @@ const Navbar: React.FC = () => {
             <div className="navbar-item">
                 <img src={ profileIcon } alt="Perfil"/>
                 <p>Perfil</p>
+            </div>
+
+            <div className="navbar-logout">
+                <img src={profileImg} alt="Foto de Perfil"/>
+                <p>usuario</p>
+                <LogoutComponent onClick = {handleLogout}>
+                    <img src={LogoutIcon} alt="Sair"/>
+                </LogoutComponent>
             </div>
 
         </NavbarComponent>
