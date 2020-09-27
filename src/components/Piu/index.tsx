@@ -21,7 +21,7 @@ const Piu: React.FC = () => {
                 </div>
 
                 <div className="piu-msg">
-                    <p>piu piu piu piu piu</p>
+                    <p>piu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piu</p>
                 </div>
 
                 <div className="piu-react">
@@ -43,9 +43,9 @@ const Piu: React.FC = () => {
                 </div>
             </div>
 
-                <div className="piu-delete">
+                {/* <div className="piu-delete">
                     <img src={trashIcon} alt="Excluir"/>
-                </div>
+                </div> */}
                 
         </PiuComponent>
     )

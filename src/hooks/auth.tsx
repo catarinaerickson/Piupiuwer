@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState} from 'react';
+import React, { createContext, useCallback, useContext, useState} from 'react';
 import api from '../services/api';
 
 interface AuthContextData {
@@ -7,22 +7,22 @@ interface AuthContextData {
     logout(): void;
 }
 
-interface userInfo {
-    id: number;
-    username: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    foto: string;
-    favoritos: [];
-    pius: [];
-    seguidores: [];
-    seguindo: [];
-    sobre: string;
-}
+// interface userInfo {
+//     id: number;
+//     username: string;
+//     first_name: string;
+//     last_name: string;
+//     email: string;
+//     foto: string;
+//     favoritos: [];
+//     pius: [];
+//     seguidores: [];
+//     seguindo: [];
+//     sobre: string;
+// }
 
-interface AuthState {
-    user: userInfo;
+interface AuthState{
+    user: object;
     token: string;
 }
 
@@ -42,6 +42,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         const token = localStorage.getItem('@Project:token');
         
         if (user && token) {
+            api.defaults.headers.authorization = `JWT ${token}`;
             return {user: JSON.parse(user), token}
         }
 
@@ -58,7 +59,8 @@ export const AuthProvider: React.FC = ({ children }) => {
                 const userResponse = await api.get('usuarios/?search=' + username);
                 const user = userResponse.data[0];
                 localStorage.setItem('@Project:user', JSON.stringify(user));
-                setUserData({ user, token});            
+                setUserData({ user, token});          
+                api.defaults.headers.authorization = `JWT ${token}`;  
             } 
         } catch (err) {
             if (err.response) {

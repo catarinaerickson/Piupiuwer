@@ -27,6 +27,7 @@ export const PageFeed = styled.div `
 
     main .input-block > img {
         width: 7rem;
+        border-radius: 50%;
     }
 
     main .input-block section {

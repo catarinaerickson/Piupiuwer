@@ -1,22 +1,36 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import { useAuth } from '../../hooks/auth';
 
 import Header from '../../components/Header';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 
 import { PageFeed } from './styles';
-import profileImg from '../../assets/images/piupic.png';
 import imgIcon from '../../assets/images/image.svg';
 import gifIcon from '../../assets/images/gif.svg';
 import smileIcon from '../../assets/images/smile.svg';
 import calendarIcon from '../../assets/images/calendar.svg';
 import Piu from '../../components/Piu';
-
+import api from '../../services/api';
 
 
  function Feed() {
 
-    
+    const {user}: any = useAuth(); 
+
+    const [pius, setPius] = useState([])
+        
+    useEffect(() => {
+        function getPius() {
+            api.get('/pius/').then(response => {
+                setPius(response.data)           
+            })
+
+        }
+        getPius();
+
+    },[])
 
      return(
          <PageFeed>
@@ -25,7 +39,7 @@ import Piu from '../../components/Piu';
                 <Header />
                 <form>
                     <div className='input-block'>
-                        <img src={ profileImg } alt="Foto de Perfil"/>
+                        <img src={ user.foto } alt="Foto de Perfil"/>
                         <section>
                             <textarea placeholder='Dá um piu!'></textarea>
                             <div className="options">
@@ -44,8 +58,15 @@ import Piu from '../../components/Piu';
                     </div>
                 </form>
 
-                <Piu />
-                <Piu />
+                {pius.map((piu, index) => {
+                    return(
+                        <Piu key={index} />
+                    )
+                })}
+
+                {/* <Piu />
+                <Piu /> */}
+
             </main>
          </PageFeed>
      )

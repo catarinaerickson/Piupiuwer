@@ -55,11 +55,11 @@ export const PiuComponent = styled.section `
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        margin-right: 1.5rem;
     }    
 
     .piu-block .piu-react .icon img {
         height: 2rem;
+        margin-right: 1rem;
     }    
 
     .piu-block .piu-react .icon p {

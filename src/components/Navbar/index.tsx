@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
         logout();
     }, [logout])
 
-    const {user} = useAuth();
+    const {user}: any = useAuth();
 
     return (
         <NavbarComponent>
@@ -68,8 +68,8 @@ const Navbar: React.FC = () => {
             </div>
 
             <div className="navbar-logout">
-                <img src={profileImg} alt="Foto de Perfil"/>
-                <p>usuario</p>
+                <img src={user.foto} alt="Foto de Perfil"/>
+                <p>@{user.username}</p>
                 <LogoutComponent onClick = {handleLogout}>
                     <img src={LogoutIcon} alt="Sair"/>
                 </LogoutComponent>

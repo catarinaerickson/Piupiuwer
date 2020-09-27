@@ -9,7 +9,8 @@ export const NavbarComponent = styled.div `
     height:100%;
     padding: 1rem;
     margin-right: 0.1rem;
-    position: sticky;
+    
+   
     .navbar-logo {
         margin-bottom: 3rem;
     }
@@ -45,12 +46,13 @@ export const NavbarComponent = styled.div `
     .navbar-logout > img {
         width: 4rem;
         display: none;
+        border-radius: 50%;
     }
 
     .navbar-logout p {
-        font: 500 2.0rem Archivo;
-        color: var(--color-input-content);
-        margin: 0 3rem 0 0.5rem;
+        font: 500 1.2rem POppins;
+        color: var(--color-input-text);
+        margin-left: 0.5rem;
         display: none;
     }
 
