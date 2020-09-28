@@ -11,6 +11,7 @@ export const PageFeed = styled.div `
         width: 100%;
         display:flex;
         flex-direction:column;
+        margin-left: calc(20vw + 0.1rem);
     }
 
     main .input-block {
@@ -66,6 +67,12 @@ export const PageFeed = styled.div `
 
         main .input-block section .options .options-bar {
             display: none;
+        }
+    }
+
+    @media (max-width: 500px) {
+        main {
+            margin-left: 0;
         }
     }
     

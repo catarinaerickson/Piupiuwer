@@ -1,27 +1,56 @@
-import React from 'react';
+import React, {ButtonHTMLAttributes} from 'react';
 
-import { PiuComponent } from './styles';
+import { PiuComponent, ReactionButtonComponent } from './styles';
 
-import profileImg from '../../assets/images/piupic.png';
 import commentIcon from '../../assets/images/message-circle.svg';
-import repiuIcon from '../../assets/images/repiu.svg';
+import favoritIcon from '../../assets/images/star.svg';
 import likeIcon from '../../assets/images/heart.svg';
 import shareIcon from '../../assets/images/upload.svg';
 import trashIcon from '../../assets/images/trash.svg';
 
-const Piu: React.FC = () => {
+interface PiuProps {
+    username: '';
+    first_name: '';
+    texto: '';
+    last_name: '';
+    foto: '';
+    likers: [];
+    favoritado_por: [];
+    like(): void;
+    favorit(): void;
+}
+
+interface ReactionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
+    react(): void;
+    src: string;
+    reactions: number;
+}
+
+const ReactionButton: React.FC<ReactionButtonProps> = ({react, src, reactions, ...rest}) => {
+    return (
+        <ReactionButtonComponent onClick={react} {...rest}>
+            <img src={src} alt="Favoritos"/>
+            <p>{reactions}</p>
+        </ReactionButtonComponent>
+    )
+}
+
+const Piu: React.FC<PiuProps> = ({username, first_name, texto, last_name, likers, 
+    favoritado_por, foto, like, favorit}) => {   
     return(
         <PiuComponent>
-            <img src={ profileImg } alt='Foto de Perfil'/>
+            <div className="piu-foto">
+                <img src={ foto } alt='Foto de Perfil'/>
+            </div>
             <div className="piu-block">
 
                 <div className="piu-user">
-                    <strong>Pintinho</strong>
-                    <p>@_amarelinho</p>
+                    <strong>{first_name} {last_name}</strong>
+                    <p>@{username}</p>
                 </div>
 
                 <div className="piu-msg">
-                    <p>piu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piupiu piu piu piu piu</p>
+                    <p>{texto}</p>
                 </div>
 
                 <div className="piu-react">
@@ -29,23 +58,27 @@ const Piu: React.FC = () => {
                         <img src={commentIcon} alt="Comentários"/>
                         <p>1</p>
                     </div>
-                    <div className="icon">
-                        <img src={repiuIcon} alt="Repius"/>
-                        <p>2</p>
-                    </div>
-                    <div className="icon">
-                        <img src={likeIcon} alt="Curtidas"/>
-                        <p>3</p>
-                    </div>
+                    <ReactionButton
+                        
+                        react={favorit}
+                        src={favoritIcon}
+                        reactions={favoritado_por.length}
+                    />
+                    <ReactionButton
+                        
+                        react={like}
+                        src={likeIcon}
+                        reactions={likers.length}
+                    />                    
                     <div className="icon">
                         <img src={shareIcon} alt="Compartilhar"/>
                     </div>
                 </div>
             </div>
 
-                {/* <div className="piu-delete">
-                    <img src={trashIcon} alt="Excluir"/>
-                </div> */}
+            {/* <div className="piu-delete">
+                <img src={trashIcon} alt="Excluir"/>
+            </div> */}
                 
         </PiuComponent>
     )

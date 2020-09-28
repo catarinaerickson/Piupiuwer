@@ -12,7 +12,6 @@ import messageIcon from '../../assets/images/mail.svg';
 import markerIcon from '../../assets/images/bookmark.svg';
 import listIcon from '../../assets/images/list.svg';
 import profileIcon from '../../assets/images/person.svg';
-import profileImg from '../../assets/images/piupic.png';
 import LogoutIcon from '../../assets/images/logout.svg';
 
 

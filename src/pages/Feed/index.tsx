@@ -14,23 +14,51 @@ import calendarIcon from '../../assets/images/calendar.svg';
 import Piu from '../../components/Piu';
 import api from '../../services/api';
 
+interface PiuObject {
+    usuario: {
+        username: '';
+        first_name: '';
+        last_name: '';
+        foto: '';
+    };
+    texto:'';
+    likers: [];
+    favoritado_por: [];
+    id: number;
+
+}
+
+interface LikedState {
+    piuId: number;
+    userLiked: boolean;
+}
 
  function Feed() {
 
     const {user}: any = useAuth(); 
 
-    const [pius, setPius] = useState([])
-        
+    const [pius, setPius] = useState([]);
+    // const [liked, setLiked] = useState<LikedState>({} as LikedState);
+    
+    // carregar pius
     useEffect(() => {
         function getPius() {
             api.get('/pius/').then(response => {
-                setPius(response.data)           
+                setPius(response.data)     
+                
+                console.log(response.data)      
             })
-
         }
         getPius();
-
     },[])
+
+    function handleLike() {
+        console.log(user)
+    }
+
+    function handleFavorit() {
+        console.log(user.id)
+    }
 
      return(
          <PageFeed>
@@ -58,14 +86,22 @@ import api from '../../services/api';
                     </div>
                 </form>
 
-                {pius.map((piu, index) => {
+                {pius.map((piu: PiuObject) => {
                     return(
-                        <Piu key={index} />
+                        <Piu 
+                            key={piu.id}
+                            username={piu.usuario.username}
+                            first_name={piu.usuario.first_name}
+                            last_name={piu.usuario.last_name}
+                            texto={piu.texto}
+                            likers={piu.likers}
+                            favoritado_por={piu.favoritado_por}
+                            foto={piu.usuario.foto}                            
+                            like={handleLike}
+                            favorit={handleFavorit}
+                        />
                     )
                 })}
-
-                {/* <Piu />
-                <Piu /> */}
 
             </main>
          </PageFeed>

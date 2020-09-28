@@ -66,9 +66,9 @@ function Login() {
                 </form>
 
                 <div className="links">
-                    <a >Esqueceu sua senha?</a> 
+                    <a href='#'>Esqueceu sua senha?</a> 
                     <div className="dot"></div>
-                    <a >Increver-se no Piupiuwer</a>
+                    <a href='#'>Increver-se no Piupiuwer</a>
                 </div>
             </div>
 

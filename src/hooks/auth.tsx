@@ -7,20 +7,6 @@ interface AuthContextData {
     logout(): void;
 }
 
-// interface userInfo {
-//     id: number;
-//     username: string;
-//     first_name: string;
-//     last_name: string;
-//     email: string;
-//     foto: string;
-//     favoritos: [];
-//     pius: [];
-//     seguidores: [];
-//     seguindo: [];
-//     sobre: string;
-// }
-
 interface AuthState{
     user: object;
     token: string;

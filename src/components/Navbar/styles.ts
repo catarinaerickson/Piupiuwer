@@ -7,8 +7,11 @@ export const NavbarComponent = styled.div `
     align-items: center;
     background: var(--color-background-content);
     height:100%;
+    width: 20vw;
     padding: 1rem;
     margin-right: 0.1rem;
+    position: fixed;
+    left: 0;
     
    
     .navbar-logo {
@@ -102,6 +105,7 @@ export const LogoutComponent = styled.button `
     border-radius: 3rem;
     background: var(--color-background-content);
     padding: 1rem;
+    cursor: pointer;
 
     &:hover {
         background: var(--color-primary-opacity);

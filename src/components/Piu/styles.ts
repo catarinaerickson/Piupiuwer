@@ -6,10 +6,23 @@ export const PiuComponent = styled.section `
     background: var(--color-background-content);
     padding: 1.5rem;
     margin-top: 0.1rem;
+    /* width: 100px; */
     
-    > img {
-        width: 6rem;
-        margin-right: 1rem;
+    .piu-foto {
+       margin-right: 1rem;
+       display: flex;
+       align-items:center;
+       justify-content: center;
+       border-radius: 3rem;
+       overflow-x: hidden;
+       overflow-y:hidden;
+       width: 6rem;
+       height: 6rem; 
+       background: url('../../assets/images/piupic.png');
+    }
+
+    .piu-foto img {
+       height: 6rem;
     }
 
     .piu-block {
@@ -76,4 +89,23 @@ export const PiuComponent = styled.section `
         height: 2rem;
     }
 
+`
+
+export const ReactionButtonComponent = styled.button `
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border: none;
+    cursor: pointer;
+    background: var(--color-background-content);
+
+    img {
+        height: 2rem;
+        margin-right: 1rem;
+    }
+
+    p {
+        font: 500 1.5rem Archivo;
+        color: var(--color-input-content);
+    }
 `
