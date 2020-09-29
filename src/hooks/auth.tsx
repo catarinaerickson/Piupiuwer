@@ -1,14 +1,33 @@
 import React, { createContext, useCallback, useContext, useState} from 'react';
+
 import api from '../services/api';
 
+export interface reducedUser {
+    id: number;
+    username: string;
+}
+
+export interface user {
+    username: string;
+    first_name: string;
+    last_name: string;
+    foto: string;
+    seguidores?: reducedUser[];
+    id: number;
+    pius: [];
+    favoritos: [];
+    seguindo?: reducedUser[];
+    email: string;
+}
+
 interface AuthContextData {
-    user: object;
+    user: user;
     login({username, password}: LoginCredentials): Promise<string | undefined>;
     logout(): void;
 }
 
 interface AuthState{
-    user: object;
+    user: user;
     token: string;
 }
 

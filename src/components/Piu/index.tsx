@@ -1,44 +1,170 @@
-import React, {ButtonHTMLAttributes} from 'react';
+import React, {ButtonHTMLAttributes, useCallback, useEffect, useState} from 'react';
 
-import { PiuComponent, ReactionButtonComponent } from './styles';
+import { DeletePiuComponent, PiuComponent, ReactionButtonComponent } from './styles';
 
 import commentIcon from '../../assets/images/message-circle.svg';
 import favoritIcon from '../../assets/images/star.svg';
+import yellowFavoritIcon from '../../assets/images/yellowstar.svg';
 import likeIcon from '../../assets/images/heart.svg';
+import redLikeIcon from '../../assets/images/redheart.svg';
 import shareIcon from '../../assets/images/upload.svg';
 import trashIcon from '../../assets/images/trash.svg';
+import redTrashIcon from '../../assets/images/redtrash.svg';
+import api from '../../services/api';
+import { reducedUser, useAuth, user } from '../../hooks/auth';
 
 interface PiuProps {
-    username: '';
-    first_name: '';
-    texto: '';
-    last_name: '';
-    foto: '';
-    likers: [];
-    favoritado_por: [];
-    like(): void;
-    favorit(): void;
+    username: string;
+    first_name: string;
+    texto: string;
+    last_name: string;
+    foto: string;
+    likers: reducedUser[];
+    favoritado_por: reducedUser[];
+    piuId: number;
+    disappear: boolean;
+    transition: boolean;
 }
 
 interface ReactionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
     react(): void;
-    src: string;
+    reacted: boolean;
     reactions: number;
+    reactType: string;
 }
 
-const ReactionButton: React.FC<ReactionButtonProps> = ({react, src, reactions, ...rest}) => {
+interface DeletePiuProps extends ButtonHTMLAttributes<HTMLButtonElement>{
+    displayDelete: boolean;
+}
+
+const ReactionButton: React.FC<ReactionButtonProps> = ({react, reacted, reactions, reactType, ...rest}) => {
+    // define a cor do icone caso o usuario ja tiver reagido ou fizer uma nova reação
+    const iconColor = useCallback(() => {
+        if(reacted) {
+            if (reactType == 'likes') {
+                return redLikeIcon
+            } else if (reactType == 'favorits') {
+                return yellowFavoritIcon
+            }
+        } else{
+            if (reactType == 'likes') {
+                return likeIcon
+            } else if (reactType == 'favorits') {
+                return favoritIcon
+            }
+        }
+    },[reacted, reactType, likeIcon, redLikeIcon, favoritIcon, yellowFavoritIcon])
+
     return (
         <ReactionButtonComponent onClick={react} {...rest}>
-            <img src={src} alt="Favoritos"/>
+            <img src={iconColor()} alt="Favoritos"/>
             <p>{reactions}</p>
         </ReactionButtonComponent>
     )
 }
 
+const DeletePiu: React.FC<DeletePiuProps> = ({displayDelete, ...rest}) => {
+    const [iconSrc, setIconSrc] = useState(trashIcon);
+    return (
+        <DeletePiuComponent 
+            onMouseOver={() => {setIconSrc(redTrashIcon)}}
+            onMouseOut={() => {setIconSrc(trashIcon)}}
+            
+            displayDelete={displayDelete}
+            {...rest}
+        >
+            <img src={iconSrc} alt="Excluir"/>
+        </DeletePiuComponent>
+    )
+}
+
 const Piu: React.FC<PiuProps> = ({username, first_name, texto, last_name, likers, 
-    favoritado_por, foto, like, favorit}) => {   
+    favoritado_por, foto, piuId}) => {   
+    
+    const {user} = useAuth();
+
+    const [likes, setLikes] = useState({
+        liked: false,
+        numLikes: likers.length,
+    })
+
+    const [favorits, setFavorits] = useState({
+        favoritado: false,
+        numFavorits: favoritado_por.length
+    })
+
+    // verifica se o usuario ja reagiu com algum piu anteriormente
+    useEffect(() => {
+        function wasLiked(like: reducedUser) {
+            if (like.id == user.id) {
+                return setLikes({liked: true, numLikes: likes.numLikes})
+            }
+        }
+
+        function wasFavoritado(favorit: reducedUser) {
+            if(favorit.id == user.id) {
+                return setFavorits({favoritado: true, numFavorits: favorits.numFavorits})
+            }
+        }
+
+        likers.map((like) => {
+            wasLiked(like);
+        });
+
+        favoritado_por.map((favorit) => {
+            wasFavoritado(favorit);
+        })
+    }, [])
+
+    // faz o post de um like/dislike e atualiza os likes na página
+    const handleLike = useCallback(() => {      
+        const data = {'usuario': user.id, 'piu': piuId};
+        try {
+            api.post('pius/dar-like/', data);
+            if (likes.liked) {
+                setLikes({liked: false, numLikes: likes.numLikes - 1} )
+            } else if(!likes.liked) {
+                setLikes({liked: true, numLikes: likes.numLikes + 1})
+            }
+        } catch(err) {
+            alert('opa, estamos com problemas!');
+        }
+    }, [user, piuId, likes, setLikes]);
+
+    // faz o post de um favoritar/desfavoritar e atualiza os favorits na pégina
+    const handleFavorit = useCallback(() => {
+        const data = {'usuario': user.id, 'piu': piuId};
+        try {
+            api.post('/pius/favoritar/', data);
+            if (favorits.favoritado) {
+                setFavorits({favoritado: false, numFavorits: favorits.numFavorits - 1} )
+            } else if(!favorits.favoritado) {
+                setFavorits({favoritado: true, numFavorits: favorits.numFavorits + 1})
+            }
+        } catch (err) {
+            alert('opa, estamos com problemas!');
+        }
+    }, [user, piuId, favorits, setFavorits]);
+
+    //display da opção de excluir
+    const [displayDelete, setDisplayDelete] = useState(false);
+    useEffect(() => {
+        if (username == user.username) {
+            setDisplayDelete(true);
+        }
+    }, [])
+
+    //excluir piu
+    const [piuDisappear, setPiuDisappear] = useState(false)
+    const [piuTransition, setPiuTransition] = useState(false)
+    const handleDelete = useCallback(() => {
+        api.delete(`/pius/${piuId}`);
+        setPiuTransition(true);
+        setTimeout(() => {setPiuDisappear(true);}, 1000);        
+    }, [piuId, setPiuDisappear, setPiuDisappear])
+
     return(
-        <PiuComponent>
+        <PiuComponent disappear={piuDisappear} transition={piuTransition}>
             <div className="piu-foto">
                 <img src={ foto } alt='Foto de Perfil'/>
             </div>
@@ -56,19 +182,19 @@ const Piu: React.FC<PiuProps> = ({username, first_name, texto, last_name, likers
                 <div className="piu-react">
                     <div className="icon">
                         <img src={commentIcon} alt="Comentários"/>
-                        <p>1</p>
+                        <p>0</p>
                     </div>
                     <ReactionButton
-                        
-                        react={favorit}
-                        src={favoritIcon}
-                        reactions={favoritado_por.length}
+                        reactType='favorits'
+                        react={handleFavorit}
+                        reacted={favorits.favoritado}
+                        reactions={favorits.numFavorits}
                     />
                     <ReactionButton
-                        
-                        react={like}
-                        src={likeIcon}
-                        reactions={likers.length}
+                        reactType='likes'
+                        react={handleLike}
+                        reacted={likes.liked}
+                        reactions={likes.numLikes}
                     />                    
                     <div className="icon">
                         <img src={shareIcon} alt="Compartilhar"/>
@@ -76,9 +202,12 @@ const Piu: React.FC<PiuProps> = ({username, first_name, texto, last_name, likers
                 </div>
             </div>
 
-            {/* <div className="piu-delete">
-                <img src={trashIcon} alt="Excluir"/>
-            </div> */}
+            <div className="delete-button">
+                <DeletePiu 
+                onClick={handleDelete}
+                displayDelete={displayDelete}/>
+            </div>
+
                 
         </PiuComponent>
     )

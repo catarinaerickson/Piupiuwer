@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, FormHTMLAttributes, HTMLAttributes, useCallback, useEffect, useState } from 'react';
 
-import { useAuth } from '../../hooks/auth';
+import { useAuth, user } from '../../hooks/auth';
 
 import Header from '../../components/Header';
 import Navbar from '../../components/Navbar';
 import Button from '../../components/Button';
 
-import { PageFeed } from './styles';
+import { InputErrorComponent, InputPiuForm, PageFeed } from './styles';
 import imgIcon from '../../assets/images/image.svg';
 import gifIcon from '../../assets/images/gif.svg';
 import smileIcon from '../../assets/images/smile.svg';
@@ -14,31 +14,114 @@ import calendarIcon from '../../assets/images/calendar.svg';
 import Piu from '../../components/Piu';
 import api from '../../services/api';
 
+
 interface PiuObject {
-    usuario: {
-        username: '';
-        first_name: '';
-        last_name: '';
-        foto: '';
-    };
-    texto:'';
+    usuario: user;
+    texto:string;
     likers: [];
     favoritado_por: [];
     id: number;
-
 }
 
-interface LikedState {
-    piuId: number;
-    userLiked: boolean;
+interface InputPiuProps extends FormHTMLAttributes<HTMLFormElement> {
+    profileImg: string;
+    userId: number
+}
+
+interface InputErrorProps {
+    content: string,
+    isRed: boolean,
+}
+
+const InputError: React.FC<InputErrorProps> = ({content, isRed}) => {
+    return (
+        <InputErrorComponent isRed={isRed}>
+            <p>{content}</p>
+        </InputErrorComponent>
+    )
+}
+
+const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, ...rest}) => {
+
+    const [message, setMessage] = useState('');
+
+    const [counter, setCounter] = useState('');
+
+    const [redCounter, setRedCounter] = useState(false);
+
+    const[errInput, setErrInput] = useState('');
+
+    //define a cor do contador
+    useEffect(() => {
+        if (message.length != 0) {
+            setCounter(message.length + '/140');
+            if(message.length > 140) {
+                setRedCounter(true);
+            } else {
+                setRedCounter(false);
+            };
+        } else {
+            setCounter('');
+        }
+    }, [message])
+    
+    // função para postar no piu e exibir mesegem de erro
+    const handlePostPiu = useCallback((e: FormEvent) => {
+        const data = {"usuario": userId, "texto": message };
+        if (message.length == 0) {
+            e.preventDefault();
+            setErrInput('Você não pode enviar um piu vazio!')
+            setTimeout(() => {setErrInput('')}, 3000)
+        } else if (message.length > 140) {
+            e.preventDefault();
+            setErrInput('Seu piu deve ter, no máximo, 140 caracteres!')
+            setTimeout(() => {setErrInput('')}, 3000)
+        } else if(message.length>0 || message.length<141){
+            api.post('/pius/', data);
+            // setTimeout(() => {setMessage('')}, 1000);
+        }
+        
+    }, [userId, message, api, setMessage, setErrInput])
+
+    return(
+        <InputPiuForm onSubmit={handlePostPiu}>
+            <img src={ profileImg } alt="Foto de Perfil"/>
+            <section>
+                <textarea 
+                placeholder='Dá um piu!' 
+                value={message}
+                onChange={(e) => {setMessage(e.target.value)}}
+                />
+                <InputError
+                    content={counter}
+                    isRed={redCounter}
+                />
+                <InputError
+                    content={errInput}
+                    isRed={true}
+                />
+                <div className="options">
+                    <div className="options-bar">
+                        <img src={ imgIcon } alt="Adicionar imagem"/>
+                        <img src={ gifIcon } alt="Adicionar gif"/>
+                        <img src={ smileIcon } alt="Adicionar emoji"/>
+                        <img src={ calendarIcon } alt="Adicionar agenda"/>
+                    </div>
+                    <Button 
+                        title='Piupiu'
+                        isSmall={ true }
+                    />
+                </div>
+            </section>
+        </InputPiuForm>
+    )
 }
 
  function Feed() {
 
-    const {user}: any = useAuth(); 
+    const {user} = useAuth(); 
 
     const [pius, setPius] = useState([]);
-    // const [liked, setLiked] = useState<LikedState>({} as LikedState);
     
     // carregar pius
     useEffect(() => {
@@ -52,39 +135,14 @@ interface LikedState {
         getPius();
     },[])
 
-    function handleLike() {
-        console.log(user)
-    }
-
-    function handleFavorit() {
-        console.log(user.id)
-    }
 
      return(
          <PageFeed>
             <Navbar />
             <main>
                 <Header />
-                <form>
-                    <div className='input-block'>
-                        <img src={ user.foto } alt="Foto de Perfil"/>
-                        <section>
-                            <textarea placeholder='Dá um piu!'></textarea>
-                            <div className="options">
-                                <div className="options-bar">
-                                    <img src={ imgIcon } alt="Adicionar imagem"/>
-                                    <img src={ gifIcon } alt="Adicionar gif"/>
-                                    <img src={ smileIcon } alt="Adicionar emoji"/>
-                                    <img src={ calendarIcon } alt="Adicionar agenda"/>
-                                </div>
-                                <Button 
-                                    title='Piupiu'
-                                    isSmall={ true }
-                                />
-                            </div>
-                        </section>
-                    </div>
-                </form>
+
+                <InputPiu userId={user.id} profileImg={user.foto}/>
 
                 {pius.map((piu: PiuObject) => {
                     return(
@@ -96,9 +154,10 @@ interface LikedState {
                             texto={piu.texto}
                             likers={piu.likers}
                             favoritado_por={piu.favoritado_por}
-                            foto={piu.usuario.foto}                            
-                            like={handleLike}
-                            favorit={handleFavorit}
+                            foto={piu.usuario.foto}      
+                            piuId={piu.id}    
+                            disappear={false}     
+                            transition={false}             
                         />
                     )
                 })}

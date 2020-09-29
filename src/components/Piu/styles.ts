@@ -1,12 +1,32 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const PiuComponent = styled.section `
+
+interface PiuProps {
+    disappear: boolean,
+    transition: boolean
+}
+
+export const PiuComponent = styled.section<PiuProps> `
     display: flex;
     align-items: flex-start;
     background: var(--color-background-content);
     padding: 1.5rem;
     margin-top: 0.1rem;
-    /* width: 100px; */
+    transition: opacity 1s;
+    
+    ${props =>
+        props.disappear &&
+        css`
+            display: none;
+        `
+    };
+
+    ${props =>
+        props.transition &&
+        css`
+            opacity: 0;
+        `
+    };
     
     .piu-foto {
        margin-right: 1rem;
@@ -80,13 +100,9 @@ export const PiuComponent = styled.section `
         color: var(--color-input-content);
     }
 
-    .piu-delete {
+    .delete-button {
         display: flex;
-        justify-content: flex-end;
-    }
-
-    .piu-delete img {
-        height: 2rem;
+        justify-content: flex-end;    
     }
 
 `
@@ -108,4 +124,31 @@ export const ReactionButtonComponent = styled.button `
         font: 500 1.5rem Archivo;
         color: var(--color-input-content);
     }
+`
+
+interface DeletePiuProps {
+    displayDelete: boolean;
+}
+
+export const DeletePiuComponent = styled.button<DeletePiuProps> `
+    border: 0;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    background: var(--color-background-content);
+    cursor: pointer;
+    
+    img {
+        display: none;
+        height: 2rem;
+    }
+    
+    ${props =>
+	    props.displayDelete &&
+	    css`
+            img {
+                display: block;
+            }
+	    `};
+
 `
