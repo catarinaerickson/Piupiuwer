@@ -1,7 +1,7 @@
-import React, {useCallback} from 'react';
+import React, {ButtonHTMLAttributes, useCallback} from 'react';
 import { useAuth } from '../../hooks/auth';
 
-import { NavbarComponent } from './styles';
+import { ArrowButtonComponent, NavbarComponent } from './styles';
 import { LogoutComponent } from './styles';
 
 import logoImg from '../../assets/images/logo.svg';
@@ -13,10 +13,27 @@ import markerIcon from '../../assets/images/bookmark.svg';
 import listIcon from '../../assets/images/list.svg';
 import profileIcon from '../../assets/images/person.svg';
 import LogoutIcon from '../../assets/images/logout.svg';
+import arrowIcon from '../../assets/images/arrowleft.svg';
+
+interface navbarProps {
+    displayNavbar: boolean;
+    hideNavbar(): void;
+}
+
+interface arrowProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    hideNavbar(): void;
+}
+
+const ArrowButton: React.FC<arrowProps> = ({hideNavbar, ...rest}) => {
+    return (
+        <ArrowButtonComponent onClick={hideNavbar} {...rest}>
+            <img src={ arrowIcon } alt="escoder navbar"/>
+        </ArrowButtonComponent>
+    )
+}
 
 
-
-const Navbar: React.FC = () => {
+const Navbar: React.FC<navbarProps> = ({displayNavbar, hideNavbar}) => {
     const { logout } = useAuth();
 
     const handleLogout = useCallback(() => {
@@ -26,9 +43,10 @@ const Navbar: React.FC = () => {
     const {user}: any = useAuth();
 
     return (
-        <NavbarComponent>
+        <NavbarComponent displayNavbar={displayNavbar}>
             <div className="navbar-logo">
                 <img src={ logoImg } alt="Pipiuwer"/>
+                <ArrowButton hideNavbar={hideNavbar}/>
             </div>
 
             <div className="navbar-item">

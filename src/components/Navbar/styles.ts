@@ -1,6 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const NavbarComponent = styled.div `
+interface NavbarProps {
+    displayNavbar: boolean;
+}
+
+export const NavbarComponent = styled.div<NavbarProps> `
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -16,9 +20,13 @@ export const NavbarComponent = styled.div `
    
     .navbar-logo {
         margin-bottom: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
-    .navbar-logo img {
+    .navbar-logo > img {
         height: 5rem;
     }
 
@@ -61,6 +69,15 @@ export const NavbarComponent = styled.div `
 
     @media (max-width: 500px) {
         display: none;
+
+        ${props =>
+            props.displayNavbar &&
+            css `
+                display: flex;
+                border-right: 0.1rem solid var(--color-input-content);
+            `
+        }
+        
     }
 
     @media (min-width: 850px) {
@@ -114,4 +131,25 @@ export const LogoutComponent = styled.button `
     img{
         height: 3rem;
     }
+`
+
+export const ArrowButtonComponent = styled.button `
+    display: none;
+
+    @media (max-width: 500px) {
+        border: 0;
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        border-radius: 3rem;
+        background: var(--color-background-content);
+        margin-top: 2rem;
+        cursor: pointer;
+
+        img{
+            height: 2rem;
+        }
+
+    }
+
 `

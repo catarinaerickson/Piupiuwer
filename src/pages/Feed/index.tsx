@@ -25,7 +25,9 @@ interface PiuObject {
 
 interface InputPiuProps extends FormHTMLAttributes<HTMLFormElement> {
     profileImg: string;
-    userId: number
+    userId: number;
+    pius: PiuObject[];
+    updatePius: (value:PiuObject) => void;
 }
 
 interface InputErrorProps {
@@ -41,7 +43,7 @@ const InputError: React.FC<InputErrorProps> = ({content, isRed}) => {
     )
 }
 
-const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, ...rest}) => {
+const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius, ...rest}) => {
 
     const [message, setMessage] = useState('');
 
@@ -66,7 +68,8 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, ...rest}) => {
     }, [message])
     
     // função para postar no piu e exibir mesegem de erro
-    const handlePostPiu = useCallback((e: FormEvent) => {
+    const handlePostPiu = useCallback(async (e: FormEvent) => {
+        
         const data = {"usuario": userId, "texto": message };
         if (message.length == 0) {
             e.preventDefault();
@@ -77,8 +80,9 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, ...rest}) => {
             setErrInput('Seu piu deve ter, no máximo, 140 caracteres!')
             setTimeout(() => {setErrInput('')}, 3000)
         } else if(message.length>0 || message.length<141){
-            api.post('/pius/', data);
-            // setTimeout(() => {setMessage('')}, 1000);
+            const novopiu = await api.post('/pius/', data);
+            // updatePius(novopiu.data: PiuObject)
+            
         }
         
     }, [userId, message, api, setMessage, setErrInput])
@@ -121,7 +125,7 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, ...rest}) => {
 
     const {user} = useAuth(); 
 
-    const [pius, setPius] = useState([]);
+    const [pius, setPius] = useState<PiuObject[]>([]);
     
     // carregar pius
     useEffect(() => {
@@ -135,14 +139,29 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, ...rest}) => {
         getPius();
     },[])
 
+    //abre ou fecha a navBar quando a tela tem max-width de 500px
+    const [displayNavbar, setDisplayNavbar] = useState(false);
+    const handleShowNavbar = useCallback(() => {
+        setDisplayNavbar(true);
+    }, [setDisplayNavbar])
+
+    const handleHideNavbar = useCallback(() => {
+        setDisplayNavbar(false);
+    }, [setDisplayNavbar])
+
 
      return(
          <PageFeed>
-            <Navbar />
+            <Navbar displayNavbar={displayNavbar} hideNavbar={handleHideNavbar}/>
             <main>
-                <Header />
+                <Header callNavbar={handleShowNavbar}/>
 
-                <InputPiu userId={user.id} profileImg={user.foto}/>
+                <InputPiu 
+                    userId={user.id}
+                    profileImg={user.foto}
+                    pius={pius} 
+                    updatePius={(novopiu) => {setPius([...pius, novopiu])}}
+                />
 
                 {pius.map((piu: PiuObject) => {
                     return(
