@@ -18,6 +18,7 @@ export const PageFeed = styled.div `
         main {
             margin-left: 0;
         }
+
     }
     
 

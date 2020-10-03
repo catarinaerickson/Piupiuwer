@@ -1,4 +1,4 @@
-import React, { FormEvent, FormHTMLAttributes, HTMLAttributes, useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, FormHTMLAttributes, useCallback, useEffect, useState } from 'react';
 
 import { useAuth, user } from '../../hooks/auth';
 
@@ -14,7 +14,6 @@ import calendarIcon from '../../assets/images/calendar.svg';
 import Piu from '../../components/Piu';
 import api from '../../services/api';
 
-
 interface PiuObject {
     usuario: user;
     texto:string;
@@ -27,7 +26,7 @@ interface InputPiuProps extends FormHTMLAttributes<HTMLFormElement> {
     profileImg: string;
     userId: number;
     pius: PiuObject[];
-    updatePius: (value:PiuObject) => void;
+    setPius: (pius: PiuObject[]) => void;
 }
 
 interface InputErrorProps {
@@ -43,7 +42,7 @@ const InputError: React.FC<InputErrorProps> = ({content, isRed}) => {
     )
 }
 
-const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius, ...rest}) => {
+const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, setPius, ...rest}) => {
 
     const [message, setMessage] = useState('');
 
@@ -55,7 +54,7 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius
 
     //define a cor do contador
     useEffect(() => {
-        if (message.length != 0) {
+        if (message.length !== 0) {
             setCounter(message.length + '/140');
             if(message.length > 140) {
                 setRedCounter(true);
@@ -69,23 +68,21 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius
     
     // função para postar no piu e exibir mesegem de erro
     const handlePostPiu = useCallback(async (e: FormEvent) => {
-        
+        e.preventDefault();        
         const data = {"usuario": userId, "texto": message };
-        if (message.length == 0) {
-            e.preventDefault();
+        if (message.length === 0) {
             setErrInput('Você não pode enviar um piu vazio!')
             setTimeout(() => {setErrInput('')}, 3000)
         } else if (message.length > 140) {
-            e.preventDefault();
             setErrInput('Seu piu deve ter, no máximo, 140 caracteres!')
             setTimeout(() => {setErrInput('')}, 3000)
         } else if(message.length>0 || message.length<141){
-            const novopiu = await api.post('/pius/', data);
-            // updatePius(novopiu.data: PiuObject)
-            
+            const novopiu: PiuObject = await (await api.post('/pius/', data)).data;
+            setPius([novopiu, ...pius]);   
+            setMessage('');    
         }
         
-    }, [userId, message, api, setMessage, setErrInput])
+    }, [userId, message, setMessage, setErrInput, pius, setPius])
 
     return(
         <InputPiuForm onSubmit={handlePostPiu}>
@@ -121,7 +118,7 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius
     )
 }
 
- function Feed() {
+const Feed: React.FC = () => {
 
     const {user} = useAuth(); 
 
@@ -131,9 +128,7 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius
     useEffect(() => {
         function getPius() {
             api.get('/pius/').then(response => {
-                setPius(response.data)     
-                
-                console.log(response.data)      
+                setPius(response.data);        
             })
         }
         getPius();
@@ -151,7 +146,7 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius
 
 
      return(
-         <PageFeed>
+         <PageFeed >
             <Navbar displayNavbar={displayNavbar} hideNavbar={handleHideNavbar}/>
             <main>
                 <Header callNavbar={handleShowNavbar}/>
@@ -160,8 +155,9 @@ const InputPiu: React.FC<InputPiuProps> = ({profileImg, userId, pius, updatePius
                     userId={user.id}
                     profileImg={user.foto}
                     pius={pius} 
-                    updatePius={(novopiu) => {setPius([...pius, novopiu])}}
+                    setPius={setPius}
                 />
+                
 
                 {pius.map((piu: PiuObject) => {
                     return(

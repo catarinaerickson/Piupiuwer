@@ -41,19 +41,19 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({react, reacted, reaction
     // define a cor do icone caso o usuario ja tiver reagido ou fizer uma nova reação
     const iconColor = useCallback(() => {
         if(reacted) {
-            if (reactType == 'likes') {
+            if (reactType === 'likes') {
                 return redLikeIcon
-            } else if (reactType == 'favorits') {
+            } else if (reactType === 'favorits') {
                 return yellowFavoritIcon
             }
         } else{
-            if (reactType == 'likes') {
+            if (reactType === 'likes') {
                 return likeIcon
-            } else if (reactType == 'favorits') {
+            } else if (reactType === 'favorits') {
                 return favoritIcon
             }
         }
-    },[reacted, reactType, likeIcon, redLikeIcon, favoritIcon, yellowFavoritIcon])
+    },[reacted, reactType])
 
     return (
         <ReactionButtonComponent onClick={react} {...rest}>
@@ -96,13 +96,13 @@ const Piu: React.FC<PiuProps> = ({username, first_name, texto, last_name, likers
     // verifica se o usuario ja reagiu com algum piu anteriormente
     useEffect(() => {
         function wasLiked(like: reducedUser) {
-            if (like.id == user.id) {
+            if (like.id === user.id) {
                 return setLikes({liked: true, numLikes: likes.numLikes})
             }
         }
 
         function wasFavoritado(favorit: reducedUser) {
-            if(favorit.id == user.id) {
+            if(favorit.id === user.id) {
                 return setFavorits({favoritado: true, numFavorits: favorits.numFavorits})
             }
         }
@@ -149,7 +149,7 @@ const Piu: React.FC<PiuProps> = ({username, first_name, texto, last_name, likers
     //display da opção de excluir
     const [displayDelete, setDisplayDelete] = useState(false);
     useEffect(() => {
-        if (username == user.username) {
+        if (username === user.username) {
             setDisplayDelete(true);
         }
     }, [])
@@ -161,7 +161,7 @@ const Piu: React.FC<PiuProps> = ({username, first_name, texto, last_name, likers
         api.delete(`/pius/${piuId}`);
         setPiuTransition(true);
         setTimeout(() => {setPiuDisappear(true);}, 1000);        
-    }, [piuId, setPiuDisappear, setPiuDisappear])
+    }, [piuId, setPiuDisappear])
 
     return(
         <PiuComponent disappear={piuDisappear} transition={piuTransition}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Route as ReactRouter, RouteProps as ReactRouteProps, Redirect } from 'react-router-dom';
 
 import { useAuth } from '../hooks/auth';
